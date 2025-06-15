@@ -3,347 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infographie Interactive : La Pyramide du Rétablissement avec IA</title>
+    <title>Infographie : La Pyramide du Rétablissement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #F8F9FA;
         }
-        h1, h2, h3 {
+        h1, h2, h3, .font-lora {
             font-family: 'Lora', serif;
         }
-        .step-card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        .pyramid-level {
+            position: relative;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .step-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .pyramid-level:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            z-index: -1;
         }
-        .modal {
-            transition: opacity 0.3s ease;
+        .level-1:before {
+            border-width: 0 50vw 150px 50vw;
+            border-color: transparent transparent #4A5568 transparent;
         }
-        .spinner {
-            border-top-color: #4f46e5;
-            animation: spin 1s linear infinite;
+        .level-2:before {
+             border-width: 0 40vw 150px 40vw;
+            border-color: transparent transparent #2B6CB0 transparent;
         }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+        .level-3:before {
+             border-width: 0 30vw 130px 30vw;
+            border-color: transparent transparent #2C7A7B transparent;
+        }
+        .level-4:before {
+            border-width: 0 20vw 110px 20vw;
+            border-color: transparent transparent #4C51BF transparent;
+        }
+         .pyramid-level-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 text-gray-800">
 
     <div class="container mx-auto p-4 sm:p-8">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">La Pyramide du Rétablissement</h1>
-            <p class="text-lg text-gray-600 mb-6">Un outil interactif pour explorer les 12 Étapes avec l'aide de l'IA.</p>
-            <button id="openIntentionModalBtn" class="bg-emerald-500 text-white py-3 px-6 rounded-lg shadow-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 font-bold transition-transform transform hover:scale-105">
-                Définir mon Intention du Jour ✨
-            </button>
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-3">La Pyramide du Rétablissement</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Une visualisation des 12 Étapes comme un chemin de croissance, de la survie à la transcendance.</p>
         </header>
 
-        <main class="max-w-4xl mx-auto flex flex-col items-center space-y-2">
+        <div class="pyramid-level-container space-y-[-70px] sm:space-y-[-90px] md:space-y-[-100px]">
 
-            <div class="w-full sm:w-8/12 md:w-6/12 lg:w-5/12">
-                <div class="bg-indigo-600 text-white rounded-t-lg shadow-2xl p-6 text-center">
-                    <h2 class="text-xl font-bold mb-4">NIVEAU 4 : CROISSANCE & SERVICE</h2>
-                    <div class="grid grid-cols-1 gap-4">
-                        <div id="step-12" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer">
-                            <h3 class="font-bold text-indigo-700">Étape 12</h3>
-                            <p class="text-sm">Ayant connu un réveil spirituel...</p>
+            <!-- Niveau 4: Transcendance & Service -->
+            <div class="pyramid-level level-4 w-full" style="z-index: 4;">
+                <div class="w-full max-w-md p-6 text-center">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 4 : TRANSCENDANCE</h2>
+                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-indigo-800 text-lg mb-1">Étape 12</h3>
+                        <p class="text-sm font-medium text-gray-700">Ayant connu un réveil spirituel, nous essayons de transmettre ce message et de mettre en pratique ces principes dans tous les domaines de notre vie.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Niveau 3: Action & Réparation -->
+             <div class="pyramid-level level-3 w-full" style="z-index: 3;">
+                <div class="w-full max-w-lg p-6 text-center">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 3 : ACTION EXTÉRIEURE</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
+                           <h3 class="font-bold text-teal-800">Étape 10</h3>
+                           <p class="text-xs font-medium text-gray-600">Poursuivre l'inventaire personnel et admettre promptement ses torts.</p>
                         </div>
-                        <div id="step-11" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer">
-                            <h3 class="font-bold text-indigo-700">Étape 11</h3>
-                            <p class="text-sm">Nous avons cherché par la prière et la méditation...</p>
+                         <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
+                           <h3 class="font-bold text-teal-800">Étape 11</h3>
+                           <p class="text-xs font-medium text-gray-600">Améliorer le contact conscient avec notre Puissance Supérieure.</p>
                         </div>
-                        <div id="step-10" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer">
-                            <h3 class="font-bold text-indigo-700">Étape 10</h3>
-                            <p class="text-sm">Nous avons poursuivi notre inventaire personnel...</p>
+                        <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
+                           <h3 class="font-bold text-teal-800">Étapes 8 & 9</h3>
+                           <p class="text-xs font-medium text-gray-600">Dresser la liste des personnes lésées et réparer ses torts.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full sm:w-9/12 md:w-8/12 lg:w-7/12">
-                <div class="bg-blue-500 text-white shadow-xl p-6 text-center">
-                    <h2 class="text-xl font-bold mb-4">NIVEAU 3 : RÉPARATION & RÉCONCILIATION</h2>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div id="step-8" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer">
-                            <h3 class="font-bold text-blue-700">Étape 8</h3>
-                            <p class="text-sm">Nous avons dressé une liste de toutes les personnes que nous avions lésées...</p>
+            <!-- Niveau 2: Préparation Intérieure -->
+            <div class="pyramid-level level-2 w-full" style="z-index: 2;">
+                <div class="w-full max-w-2xl p-6 text-center">
+                     <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 2 : PRÉPARATION INTÉRIEURE</h2>
+                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
+                           <h3 class="font-bold text-blue-800">Étape 4</h3>
+                           <p class="text-xs font-medium text-gray-600">Inventaire moral sans crainte.</p>
                         </div>
-                        <div id="step-9" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer">
-                            <h3 class="font-bold text-blue-700">Étape 9</h3>
-                            <p class="text-sm">Nous avons réparé nos torts directement...</p>
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
+                           <h3 class="font-bold text-blue-800">Étape 5</h3>
+                           <p class="text-xs font-medium text-gray-600">Avouer la nature exacte de nos torts.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="w-full sm:w-10/12 md:w-10/12 lg:w-9/12">
-                <div class="bg-teal-500 text-white shadow-lg p-6 text-center">
-                    <h2 class="text-xl font-bold mb-4">NIVEAU 2 : CONSTRUCTION INTÉRIEURE</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div id="step-4" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-teal-700">Étape 4</h3><p class="text-sm">Nous avons procédé sans crainte à un inventaire moral...</p></div>
-                        <div id="step-5" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-teal-700">Étape 5</h3><p class="text-sm">Nous avons avoué à Dieu, à nous-mêmes...</p></div>
-                        <div id="step-6" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-teal-700">Étape 6</h3><p class="text-sm">Nous étions tout à fait prêts à ce que Dieu...</p></div>
-                        <div id="step-7" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-teal-700">Étape 7</h3><p class="text-sm">Nous Lui avons humblement demandé...</p></div>
-                    </div>
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
+                           <h3 class="font-bold text-blue-800">Étape 6</h3>
+                           <p class="text-xs font-medium text-gray-600">Être prêt à ce que Dieu élimine nos défauts.</p>
+                        </div>
+                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
+                           <h3 class="font-bold text-blue-800">Étape 7</h3>
+                           <p class="text-xs font-medium text-gray-600">Lui demander humblement de le faire.</p>
+                        </div>
+                     </div>
                 </div>
             </div>
 
-            <div class="w-full">
-                <div class="bg-gray-700 text-white rounded-b-lg shadow-md p-6 text-center">
-                    <h2 class="text-xl font-bold mb-4">NIVEAU 1 : FONDATION & CAPITULATION</h2>
+            <!-- Niveau 1: Fondation & Survie -->
+            <div class="pyramid-level level-1 w-full" style="z-index: 1;">
+                <div class="w-full max-w-4xl p-6 text-center">
+                    <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 1 : FONDATION & SURVIE</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div id="step-1" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-gray-800">Étape 1</h3><p class="text-sm">Nous avons admis que nous étions impuissants...</p></div>
-                        <div id="step-2" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-gray-800">Étape 2</h3><p class="text-sm">Nous en sommes venus à croire qu'une Puissance...</p></div>
-                        <div id="step-3" class="step-card bg-white text-gray-900 p-4 rounded-lg shadow-md cursor-pointer"><h3 class="font-bold text-gray-800">Étape 3</h3><p class="text-sm">Nous avons décidé de confier notre volonté...</p></div>
+                       <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
+                           <h3 class="font-bold text-gray-800">Étape 1</h3>
+                           <p class="text-sm font-medium text-gray-700">Nous avons admis que nous étions impuissants devant l'alcool - que nous avions perdu la maîtrise de notre vie.</p>
+                       </div>
+                       <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
+                           <h3 class="font-bold text-gray-800">Étape 2</h3>
+                           <p class="text-sm font-medium text-gray-700">Nous en sommes venus à croire qu'une Puissance supérieure à nous-mêmes pouvait nous rendre la raison.</p>
+                       </div>
+                       <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
+                           <h3 class="font-bold text-gray-800">Étape 3</h3>
+                           <p class="text-sm font-medium text-gray-700">Nous avons décidé de confier notre volonté et notre vie aux soins de Dieu, tel que nous Le concevions.</p>
+                       </div>
                     </div>
                 </div>
             </div>
-        </main>
 
-        <footer class="text-center mt-12">
-            <p class="text-gray-500 text-sm">Cette infographie est une interprétation inspirée et ne représente pas une publication officielle des Alcooliques Anonymes.</p>
+        </div>
+
+        <footer class="text-center mt-16 pt-8 border-t border-gray-200">
+            <p class="text-gray-500 text-sm max-w-2xl mx-auto">Cette infographie est une interprétation inspirée de la hiérarchie des besoins d'Abraham Maslow, appliquée à la philosophie des 12 Étapes des Alcooliques Anonymes. Elle ne représente pas une publication officielle des AA.</p>
         </footer>
+
     </div>
 
-    <!-- Modal pour la réflexion sur les étapes -->
-    <div id="reflectionModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h2 id="modalTitle" class="text-2xl font-bold text-gray-800">Réflexion sur l'Étape X</h2>
-                <button id="closeModal" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto">
-                <p id="modalStepText" class="mb-4 text-gray-700 italic"></p>
-                <div class="mb-4">
-                    <label for="reflectionText" class="block text-sm font-medium text-gray-700 mb-2">Partagez votre réflexion ou votre expérience sur cette étape :</label>
-                    <textarea id="reflectionText" rows="6" class="w-full p-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                </div>
-                <button id="analyzeBtn" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 font-bold flex items-center justify-center">
-                    Analyser ma réflexion ✨
-                </button>
-                <div id="loader" class="hidden my-4 flex justify-center"><div class="spinner w-8 h-8 border-4 border-gray-200 rounded-full"></div></div>
-                <div id="aiResponse" class="mt-6 p-4 bg-indigo-50 border border-indigo-200 rounded-lg hidden">
-                    <h3 class="font-bold text-lg text-indigo-800 mb-2">Pistes de Réflexion de l'IA :</h3>
-                    <div id="aiResponseContent" class="text-gray-800 space-y-2"></div>
-                </div>
-                <div id="errorMessage" class="mt-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-md hidden"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal pour l'intention du jour -->
-    <div id="intentionModal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-gray-800">Définir votre Intention du Jour</h2>
-                <button id="closeIntentionModal" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto">
-                 <div class="mb-4">
-                    <label for="intentionText" class="block text-sm font-medium text-gray-700 mb-2">Quelle est votre intention principale pour aujourd'hui ? (ex: Patience, Sérénité, Courage)</label>
-                    <input type="text" id="intentionText" class="w-full p-3 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500">
-                </div>
-                <div class="mb-4">
-                    <label for="intentionContext" class="block text-sm font-medium text-gray-700 mb-2">En quelques mots, pourquoi cette intention est-elle importante pour vous aujourd'hui ?</label>
-                    <textarea id="intentionContext" rows="4" class="w-full p-3 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"></textarea>
-                </div>
-                <button id="generateIntentionBtn" class="w-full bg-emerald-500 text-white py-3 px-4 rounded-md hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 font-bold flex items-center justify-center">
-                    Générer une Méditation d'Intention ✨
-                </button>
-                 <div id="intentionLoader" class="hidden my-4 flex justify-center"><div class="spinner w-8 h-8 border-4 border-gray-200 rounded-full" style="border-top-color: #10b981;"></div></div>
-                <div id="intentionAiResponse" class="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-lg hidden">
-                    <h3 class="font-bold text-lg text-emerald-800 mb-2">Votre Méditation d'Intention :</h3>
-                    <div id="intentionAiResponseContent" class="text-gray-800 space-y-2"></div>
-                </div>
-                <div id="intentionErrorMessage" class="mt-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-md hidden"></div>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        const stepsData = {
-            "step-1": { title: "Étape 1", text: "Nous avons admis que nous étions impuissants devant l'alcool - que nous avions perdu la maîtrise de notre vie." },
-            "step-2": { title: "Étape 2", text: "Nous en sommes venus à croire qu'une Puissance supérieure à nous-mêmes pouvait nous rendre la raison." },
-            "step-3": { title: "Étape 3", text: "Nous avons décidé de confier notre volonté et notre vie aux soins de Dieu, tel que nous Le concevions." },
-            "step-4": { title: "Étape 4", text: "Nous avons procédé sans crainte à un inventaire moral approfondi de nous-mêmes." },
-            "step-5": { title: "Étape 5", text: "Nous avons avoué à Dieu, à nous-mêmes et à un autre être humain la nature exacte de nos torts." },
-            "step-6": { title: "Étape 6", text: "Nous étions tout à fait prêts à ce que Dieu élimine tous ces défauts de caractère." },
-            "step-7": { title: "Étape 7", text: "Nous Lui avons humblement demandé de faire disparaître nos défauts." },
-            "step-8": { title: "Étape 8", text: "Nous avons dressé une liste de toutes les personnes que nous avions lésées et nous avons consenti à réparer nos torts envers chacune d'elles." },
-            "step-9": { title: "Étape 9", text: "Nous avons réparé nos torts directement envers ces personnes dans la mesure du possible, sauf lorsqu'en ce faisant, nous risquions de leur nuire ou de nuire à d'autres." },
-            "step-10": { title: "Étape 10", text: "Nous avons poursuivi notre inventaire personnel et promptement admis nos torts dès que nous nous en sommes aperçus." },
-            "step-11": { title: "Étape 11", text: "Nous avons cherché par la prière et la méditation à améliorer notre contact conscient avec Dieu, tel que nous Le concevions, Lui demandant seulement de connaître Sa volonté à notre égard et de nous donner la force de l'exécuter." },
-            "step-12": { title: "Étape 12", text: "Ayant connu un réveil spirituel comme résultat de ces étapes, nous avons essayé de transmettre ce message à d'autres alcooliques et de mettre en pratique ces principes dans tous les domaines de notre vie." }
-        };
-
-        // Modal de Réflexion sur les Étapes
-        const reflectionModal = document.getElementById('reflectionModal');
-        const closeModalBtn = document.getElementById('closeModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalStepText = document.getElementById('modalStepText');
-        const reflectionText = document.getElementById('reflectionText');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const loader = document.getElementById('loader');
-        const aiResponse = document.getElementById('aiResponse');
-        const aiResponseContent = document.getElementById('aiResponseContent');
-        const errorMessage = document.getElementById('errorMessage');
-        let currentStep = '';
-
-        document.querySelectorAll('.step-card').forEach(card => {
-            card.addEventListener('click', () => {
-                currentStep = card.id;
-                const stepInfo = stepsData[currentStep];
-                modalTitle.textContent = `Réflexion sur l'${stepInfo.title}`;
-                modalStepText.textContent = stepInfo.text;
-                reflectionText.value = '';
-                aiResponse.classList.add('hidden');
-                errorMessage.classList.add('hidden');
-                reflectionModal.classList.remove('hidden');
-                reflectionModal.classList.add('flex');
-            });
-        });
-
-        const closeReflectionModal = () => {
-            reflectionModal.classList.add('hidden');
-            reflectionModal.classList.remove('flex');
-        };
-
-        closeModalBtn.addEventListener('click', closeReflectionModal);
-        reflectionModal.addEventListener('click', (e) => {
-            if (e.target === reflectionModal) closeReflectionModal();
-        });
-
-        analyzeBtn.addEventListener('click', async () => {
-            const userText = reflectionText.value.trim();
-            if (!userText) {
-                errorMessage.textContent = 'Veuillez écrire votre réflexion avant de l\'analyser.';
-                errorMessage.classList.remove('hidden');
-                return;
-            }
-
-            loader.classList.remove('hidden');
-            aiResponse.classList.add('hidden');
-            errorMessage.classList.add('hidden');
-            analyzeBtn.disabled = true;
-            
-            const stepNumber = currentStep.replace('step-', '');
-            const prompt = `En tant qu'assistant de rétablissement empathique et sage, lis la réflexion suivante sur l'étape ${stepNumber} des Alcooliques Anonymes. Sans donner de conseils directs ni d'avis personnel, identifie les thèmes principaux, les émotions exprimées (comme la peur, la gratitude, le ressentiment, etc.), et pose une ou deux questions ouvertes et bienveillantes pour encourager une introspection plus profonde. Réponds sur un ton calme et de soutien, en utilisant le vouvoiement. La réponse doit être structurée en paragraphes clairs. Réflexion de l'utilisateur : "${userText}"`;
-
-            try {
-                const responseText = await callGemini(prompt);
-                aiResponseContent.innerHTML = responseText.replace(/\n/g, '<br>');
-                aiResponse.classList.remove('hidden');
-            } catch (error) {
-                errorMessage.textContent = `Une erreur est survenue : ${error.message}. Veuillez réessayer.`;
-                errorMessage.classList.remove('hidden');
-            } finally {
-                loader.classList.add('hidden');
-                analyzeBtn.disabled = false;
-            }
-        });
-
-        // Modal d'Intention du Jour
-        const intentionModal = document.getElementById('intentionModal');
-        const openIntentionModalBtn = document.getElementById('openIntentionModalBtn');
-        const closeIntentionModalBtn = document.getElementById('closeIntentionModal');
-        const intentionText = document.getElementById('intentionText');
-        const intentionContext = document.getElementById('intentionContext');
-        const generateIntentionBtn = document.getElementById('generateIntentionBtn');
-        const intentionLoader = document.getElementById('intentionLoader');
-        const intentionAiResponse = document.getElementById('intentionAiResponse');
-        const intentionAiResponseContent = document.getElementById('intentionAiResponseContent');
-        const intentionErrorMessage = document.getElementById('intentionErrorMessage');
-
-        openIntentionModalBtn.addEventListener('click', () => {
-            intentionText.value = '';
-            intentionContext.value = '';
-            intentionAiResponse.classList.add('hidden');
-            intentionErrorMessage.classList.add('hidden');
-            intentionModal.classList.remove('hidden');
-            intentionModal.classList.add('flex');
-        });
-
-        const closeIntentionModal = () => {
-            intentionModal.classList.add('hidden');
-            intentionModal.classList.remove('flex');
-        };
-
-        closeIntentionModalBtn.addEventListener('click', closeIntentionModal);
-        intentionModal.addEventListener('click', (e) => {
-            if (e.target === intentionModal) closeIntentionModal();
-        });
-
-        generateIntentionBtn.addEventListener('click', async () => {
-            const intention = intentionText.value.trim();
-            const context = intentionContext.value.trim();
-
-            if (!intention || !context) {
-                intentionErrorMessage.textContent = 'Veuillez définir votre intention et son contexte.';
-                intentionErrorMessage.classList.remove('hidden');
-                return;
-            }
-
-            intentionLoader.classList.remove('hidden');
-            intentionAiResponse.classList.add('hidden');
-            intentionErrorMessage.classList.add('hidden');
-            generateIntentionBtn.disabled = true;
-
-            const prompt = `En tant que guide spirituel combinant la sagesse des 12 Étapes et les concepts de la science moderne (comme ceux de Joe Dispenza), prends l'intention et le contexte suivants. L'intention de l'utilisateur est : '${intention}'. Le contexte est : '${context}'.
-1. Rédige une courte méditation/affirmation (environ 3-4 phrases) que l'utilisateur peut utiliser pour incarner cette intention aujourd'hui.
-2. Suggère une 'émotion élevée' (comme la gratitude, la joie, l'amour, l'émerveillement) à associer à cette intention.
-3. Explique brièvement en une phrase pourquoi la combinaison de l'intention et de cette émotion est puissante.
-Réponds sur un ton inspirant et bienveillant, en utilisant le vouvoiement. Structure la réponse avec des titres clairs pour chaque section.`;
-
-            try {
-                const responseText = await callGemini(prompt);
-                intentionAiResponseContent.innerHTML = responseText.replace(/\n/g, '<br>');
-                intentionAiResponse.classList.remove('hidden');
-            } catch (error) {
-                intentionErrorMessage.textContent = `Une erreur est survenue : ${error.message}. Veuillez réessayer.`;
-                intentionErrorMessage.classList.remove('hidden');
-            } finally {
-                intentionLoader.classList.add('hidden');
-                generateIntentionBtn.disabled = false;
-            }
-        });
-
-        async function callGemini(prompt) {
-            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erreur de l'API: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-
-            if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0) {
-                return result.candidates[0].content.parts[0].text;
-            } else {
-                throw new Error("La réponse de l'API est invalide ou vide.");
-            }
-        }
-    </script>
 </body>
 </html>
