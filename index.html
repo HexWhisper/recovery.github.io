@@ -3,157 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infographie : La Pyramide du Rétablissement</title>
+    <title>Application d'Inventaire Personnel - Les Boys d'étapes</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF autoTable plugin for better PDF tables -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <!-- Google Fonts: Inter for a clean look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Custom styles */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F8F9FA;
+            scroll-behavior: smooth;
         }
-        h1, h2, h3, .font-lora {
-            font-family: 'Lora', serif;
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .pyramid-level {
-            position: relative;
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
-        .pyramid-level:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-style: solid;
-            z-index: -1;
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
         }
-        .level-1:before {
-            border-width: 0 50vw 150px 50vw;
-            border-color: transparent transparent #4A5568 transparent;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
         }
-        .level-2:before {
-             border-width: 0 40vw 150px 40vw;
-            border-color: transparent transparent #2B6CB0 transparent;
+        .resizable-textarea {
+            resize: vertical;
         }
-        .level-3:before {
-             border-width: 0 30vw 130px 30vw;
-            border-color: transparent transparent #2C7A7B transparent;
+        /* AI Response Box Styles */
+        .ai-response {
+            border-left: 4px solid #3b82f6;
+            background-color: #eff6ff;
         }
-        .level-4:before {
-            border-width: 0 20vw 110px 20vw;
-            border-color: transparent transparent #4C51BF transparent;
+        /* Simple spinner for loading state */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3b82f6;
+            animation: spin 1s ease infinite;
         }
-         .pyramid-level-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-slate-100 text-slate-800">
 
-    <div class="container mx-auto p-4 sm:p-8">
-        <header class="text-center mb-16">
-            <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-3">La Pyramide du Rétablissement</h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Une visualisation des 12 Étapes comme un chemin de croissance, de la survie à la transcendance.</p>
-        </header>
-
-        <div class="pyramid-level-container space-y-[-70px] sm:space-y-[-90px] md:space-y-[-100px]">
-
-            <!-- Niveau 4: Transcendance & Service -->
-            <div class="pyramid-level level-4 w-full" style="z-index: 4;">
-                <div class="w-full max-w-md p-6 text-center">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 4 : TRANSCENDANCE</h2>
-                    <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-lg">
-                        <h3 class="font-bold text-indigo-800 text-lg mb-1">Étape 12</h3>
-                        <p class="text-sm font-medium text-gray-700">Ayant connu un réveil spirituel, nous essayons de transmettre ce message et de mettre en pratique ces principes dans tous les domaines de notre vie.</p>
-                    </div>
-                </div>
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-full md:w-72 bg-white p-6 shadow-lg md:h-screen md:sticky top-0 overflow-y-auto">
+            <h1 class="text-2xl font-bold text-slate-900 mb-6">Mon Inventaire - Boys des Étapes</h1>
+            <nav id="navigation" class="space-y-2">
+                <!-- Navigation links will be dynamically inserted here -->
+            </nav>
+            <div class="mt-8">
+                <button id="generate-pdf-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md">
+                    Générer le PDF
+                </button>
             </div>
-
-            <!-- Niveau 3: Action & Réparation -->
-             <div class="pyramid-level level-3 w-full" style="z-index: 3;">
-                <div class="w-full max-w-lg p-6 text-center">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 3 : ACTION EXTÉRIEURE</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                           <h3 class="font-bold text-teal-800">Étape 10</h3>
-                           <p class="text-xs font-medium text-gray-600">Poursuivre l'inventaire personnel et admettre promptement ses torts.</p>
-                        </div>
-                         <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                           <h3 class="font-bold text-teal-800">Étape 11</h3>
-                           <p class="text-xs font-medium text-gray-600">Améliorer le contact conscient avec notre Puissance Supérieure.</p>
-                        </div>
-                        <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                           <h3 class="font-bold text-teal-800">Étapes 8 & 9</h3>
-                           <p class="text-xs font-medium text-gray-600">Dresser la liste des personnes lésées et réparer ses torts.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="mt-4 text-center">
+                 <p id="status" class="text-sm text-slate-500"></p>
             </div>
+        </aside>
 
-            <!-- Niveau 2: Préparation Intérieure -->
-            <div class="pyramid-level level-2 w-full" style="z-index: 2;">
-                <div class="w-full max-w-2xl p-6 text-center">
-                     <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 2 : PRÉPARATION INTÉRIEURE</h2>
-                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
-                           <h3 class="font-bold text-blue-800">Étape 4</h3>
-                           <p class="text-xs font-medium text-gray-600">Inventaire moral sans crainte.</p>
-                        </div>
-                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
-                           <h3 class="font-bold text-blue-800">Étape 5</h3>
-                           <p class="text-xs font-medium text-gray-600">Avouer la nature exacte de nos torts.</p>
-                        </div>
-                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
-                           <h3 class="font-bold text-blue-800">Étape 6</h3>
-                           <p class="text-xs font-medium text-gray-600">Être prêt à ce que Dieu élimine nos défauts.</p>
-                        </div>
-                        <div class="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-md">
-                           <h3 class="font-bold text-blue-800">Étape 7</h3>
-                           <p class="text-xs font-medium text-gray-600">Lui demander humblement de le faire.</p>
-                        </div>
-                     </div>
-                </div>
+        <!-- Main Content -->
+        <main class="flex-1 p-4 md:p-10">
+            <div id="content" class="space-y-12">
+                <!-- Content sections will be dynamically inserted here -->
             </div>
-
-            <!-- Niveau 1: Fondation & Survie -->
-            <div class="pyramid-level level-1 w-full" style="z-index: 1;">
-                <div class="w-full max-w-4xl p-6 text-center">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">NIVEAU 1 : FONDATION & SURVIE</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                       <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                           <h3 class="font-bold text-gray-800">Étape 1</h3>
-                           <p class="text-sm font-medium text-gray-700">Nous avons admis que nous étions impuissants devant l'alcool - que nous avions perdu la maîtrise de notre vie.</p>
-                       </div>
-                       <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                           <h3 class="font-bold text-gray-800">Étape 2</h3>
-                           <p class="text-sm font-medium text-gray-700">Nous en sommes venus à croire qu'une Puissance supérieure à nous-mêmes pouvait nous rendre la raison.</p>
-                       </div>
-                       <div class="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md">
-                           <h3 class="font-bold text-gray-800">Étape 3</h3>
-                           <p class="text-sm font-medium text-gray-700">Nous avons décidé de confier notre volonté et notre vie aux soins de Dieu, tel que nous Le concevions.</p>
-                       </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <footer class="text-center mt-16 pt-8 border-t border-gray-200">
-            <p class="text-gray-500 text-sm max-w-2xl mx-auto">Cette infographie est une interprétation inspirée de la hiérarchie des besoins d'Abraham Maslow, appliquée à la philosophie des 12 Étapes des Alcooliques Anonymes. Elle ne représente pas une publication officielle des AA.</p>
-        </footer>
-
+        </main>
     </div>
+
+    <script>
+        // --- DATA STRUCTURE FOR THE QUESTIONNAIRE ---
+        const questionnaire = {
+            introduction: {
+                title: "Introduction",
+                content: [
+                    { type: 'heading', text: "LA QUATRIÈME ÉTAPE (À lire avant de commencer)" },
+                    { type: 'paragraph', text: "Demande régulièrement à ta Puissance Supérieure de t'aider. Va réfléchir à « La Source ». Laisse monter en toi tes moindres souvenirs. N'essaie pas de contrôler tes émotions en les diminuant ou en les amplifiant en te disant, par exemple « ça, ce n'est pas si important ; avec le recul du temps, je m'aperçois que c'est de l'enfantillage ». Si tu y as pensé, c'est que ton subconscient en a gardé un souvenir plus important que tu ne le soupçonnes peut-être. Si au contraire, peu d'événements te reviennent en mémoire, ne cherche pas midi à quatorze heures. En allant plus loin dans le questionnaire, certaines choses remonteront peut-être à la surface. Reviens alors dans cette section et reportes-y les noms et les événements qui doivent y être ajoutés. Sois sincère ! Va à ton rythme. Ne te soucie pas de savoir si toute la feuille doit être remplie ou si tu dois en ajouter une autre parce qu'il n'y a plus de place. Écris ton vécu. Tu es unique. Personne n'a vécu ni ne vivra exactement les mêmes choses que toi. Pourquoi te soucier alors de ce qu'il est normal d'écrire ou pas. Après avoir écrit ton vécu, dresse une liste de tous les ressentiments qui t'habitent. Le mot « ressentiment » veut dire « souvenirs qui nous font mal avec désir de se venger ». Tu n'as qu'à remplir les colonnes selon les exemples proposés." },
+                    { type: 'heading', text: "Façon de procéder" },
+                    { type: 'list', items: ["Compose une prière personnelle à ton Dieu pour Lui demander la force et le courage pour aller jusqu'au bout. Sois sincère !","Réponds au questionnaire avec une rigoureuse honnêteté.","Écris ton vécu en insistant sur les points personnels qui te sont les plus sensibles (va dans les détails).","Fais la liste de tes ressentiments. (Remonte le plus loin possible)."] },
+                    { type: 'subheading', text: "Exemple de prière avant de commencer ta quatrième étape :" },
+                    { type: 'paragraph', text: "Mon Dieu, je te demande de me guider, de pouvoir me souvenir de tout avec clarté, de me protéger contre tout ressentiment ou mensonge qui m'empêcherait d'être sincère. Je te demande Ta lumière pour pouvoir grandir." }
+                ]
+            },
+            ressentiments: {
+                title: "Liste des Ressentiments",
+                type: 'table',
+                columns: ["J'ai du ressentiment envers :", "La cause :", "J'ai été atteint dans :"],
+                description: "Cliquez sur 'Ajouter un ressentiment' pour ajouter une nouvelle ligne au tableau. Toutes les données sont sauvegardées automatiquement."
+            },
+            amour_dependance: {
+                title: "Amour ou dépendance",
+                questions: [ "As-tu eu plus de moments heureux que de moments malheureux dans ta famille, avec tes blondes, tes ami(e)s ou camarades de travail ?", "As-tu eu l'impression d'aimer plus que tu as été aimé dans ta famille, avec tes blondes, ton épouse, tes ami(e)s ou camarades de travail ?", "Te sentais-tu responsable du bonheur ou du malheur de ceux que tu aimais ?", "Avais-tu compris que tu n'étais responsable que de ton bonheur à toi ?", "Croyais-tu que le comportement de l'autre t'empêchait de faire des choses ?", "Tenais-tu les autres responsables de tes problèmes ?", "As-tu compris que tu te laissais manipuler par l'autre ?", "Pouvais-tu identifier courageusement tes qualités et tes défauts ?", "Te donnais-tu le droit de penser à devenir plus heureux ?", "Pouvais-tu admettre qu'un adulte équilibré soit le seul responsable de ses actes ?", "Croyais-tu que le changement d'attitude de l'autre pouvait améliorer ta relation ?", "Étais-tu capable d'accepter l'autre telle qu'elle était au lieu de la vouloir comme tu le voulais ?", "Pouvais-tu comprendre la différence entre désirer quelqu'un et se dévouer pour aider quelqu'un ?", "Pouvais-tu comprendre la différence entre se séparer sainement de quelqu'un et se foutre de quelqu'un (être indifférent) ?", "Avoir une tendance à trop comprendre et trop tolérer les faiblesses d'une conjointe peut cacher une dépendance sans être de l'amour. Étais-tu dépendant ?", "Vivais-tu une relation de pouvoir (je te donne, tu me donnes ou je fais tout pour toi, tu dois faire pareil) ?", "Étais-tu raisonnable pour ne pas attendre que ta partenaire comble tous tes besoins émotifs ?", "Pouvais-tu l'exprimer ouvertement malgré les réactions de ta partenaire ?", "Maintenais-tu une relation amoureuse par peur de ce que pouvait penser ta famille ou les autres ?", "Pouvais-tu te faire plaisir ?", "Étais-tu conscient de tes émotions, de tes attitudes et de ta sexualité ?", "Pouvais-tu renoncer à une relation qui détruit sans tomber en dépression ou dans la consommation de drogues (alcool, drogue, pilules) ?" ]
+            },
+            sexualite: {
+                title: "La sexualité",
+                questions: [ "As-tu déjà été entraîné ou forcé à accomplir des actes sexuels... avec des camarades ? avec des adultes ? avec des parents ?", "As-tu déjà posé des actes sexuels... avec des enfants ? avec des animaux ?", "As-tu déjà eu des expériences sexuelles avec des personnes représentant l'autorité : des professeurs ou des religieux ? Quelles ont été tes réactions ?", "As-tu connu l'inceste ? Quelles ont été tes réactions ?", "As-tu déjà eu des relations homosexuelles et quelles ont été tes réactions ?", "T'es-tu déjà prostitué ?", "As-tu déjà payé pour avoir des relations sexuelles ?", "As-tu déjà eu des expériences avec plusieurs hommes ou femmes ?", "As-tu eu des remords après une relation sexuelle ?", "As-tu déjà eu des problèmes avec ta vie sexuelle ? En connaissais-tu la cause ?", "As-tu eu le courage d'aller chercher l'aide d'un spécialiste au sujet de tes problèmes sexuels difficiles à résoudre ?", "T'acceptais-tu dans ta sexualité comme homme ?", "Étais-tu une personne fidèle ?", "Pouvais-tu accepter l'infidélité de l'autre ?", "As-tu déjà souffert de l'infidélité ?", "Pouvais-tu, avec franchise et maturité, discuter avec l'être que tu aimais des questions pertinentes telles que la sexualité ou les finances ?", "Te sentais-tu mature dans ta vie sexuelle ? Pouvais-tu confondre amour et sexualité ?", "Faisais-tu part de tes besoins sexuels à tes partenaires ?", "Te laissais-tu contrôler lors de tes relations amoureuses ?", "La sexualité était-elle une chose importante pour toi ?", "Aimais-tu ton corps ? Aimais-tu le corps de l'autre ?", "Avais-tu honte de vivre ta sexualité, à ton rythme, à cause de principes reçus dans ton enfance ? Te montrais-tu nu ?", "Si tu avais plusieurs partenaires sexuels, as-tu eu un comportement sexuel responsable en protégeant tes relations par un condom ou en ayant des jeux sexuels sans risque ?", "Est-ce que cela te rendait mal à l'aise de parler de sexualité ?", "Étais-tu gêné de penser que tes parents ou tes enfants pouvaient avoir une vie sexuelle ?", "As-tu réduit ta femme, ta blonde ou ton amie au simple rôle d'objet ?", "As-tu dévalorisé le corps de ta partenaire ?", "L'as-tu ridiculisée, diminuée ou humiliée ?", "As-tu eu des attouchements forcés (contacts physiques non désirés avec tes blondes) ?", "As-tu pris possession du corps de l'autre par le viol (contact physique non désiré à connotation sexuelle) ?" ]
+            },
+            toxicomanie: {
+                title: "La toxicomanie et l'entraide",
+                questions: [ "As-tu vraiment accepté ta toxicomanie comme étant une maladie ?", "As-tu fait l'effort d'aller assister à plusieurs réunions A.A. ou N.A. pour aller entendre des témoignages d'autres toxicomanes ?", "Es-tu réaliste dans tes attentes comme toxicomane alcoolique abstinent ? Et de ce que tes proches s'attendent de toi ?", "Étais-tu un toxicomane abstinent reconnaissant envers les fraternités (Alcooliques Anonymes, Narcotiques Anonymes, etc.) ?", "As-tu essayé d'apporter à ceux que tu aimais une aide saine et réconfortante ?", "Peux-tu être compréhensif à l'égard d'un nouveau membre dont les activités A.A. (ou d'autres fraternités) occupent une grande partie de son temps ?", "Pouvais-tu reconnaître les valeurs de la participation active aux réunions des Alcooliques Anonymes ou d'autres fraternités ?", "Donnais-tu de ton temps, de tes idées à ton propre groupe ?", "Est-ce que tu as, dans les fraternités, de bons amis avec lesquels tu peux parler ?", "Pourrais-tu accepter qu'une personne, pour un certain temps, délaisse son entourage pour se consacrer à son rétablissement avant d'en arriver à un équilibre dans sa vie ?", "Peux-tu comprendre que tu ne peux pas être responsable d'une rechute (par exemple, il n'aurait pas rechuté si je lui avais évité cette dispute) ?", "Est-ce que la toxicomanie est un sujet tabou pour toi (dans le sens où tu n'arrives pas à en parler autour de toi) ?", "Si la toxicomanie de l'autre t'empêche de vivre, ne devrais-tu pas envisager ton propre comportement vis-à-vis cette personne ?", "As-tu posé des gestes irréfléchis en mettant cela sur le compte de la toxicomanie de l'autre (laisser un enfant seul la nuit pour aller chercher un conjoint indisposé, laisser ce dernier conduire avec des enfants à bord alors qu'il est ivre, etc.) ?", "Est-ce que le comportement du toxicomane actif (alcoolique ou drogué que tu es) t'amène à passer ton agressivité sur des personnes qui n'ont rien à voir avec la situation (amis, enfants, etc.) ?", "Est-ce que le seul gros problème de ta vie serait la toxicomanie ? (Si tu réponds oui, identifie tes déficiences)." ]
+            },
+            famille: {
+                title: "La famille",
+                questions: [ "Acceptais-tu l'idée que les enfants ont leurs propres problèmes et qu'ils ont besoin d'être guidés mais non dominés ?", "As-tu été réaliste en évaluant combien les enfants ont pu être affectés par l'attitude du toxicomane que tu étais ?", "Pouvais-tu parler ouvertement à tes enfants de tes motifs, valeurs et sentiments ?", "Montrais-tu le bon exemple à tes enfants ?", "As-tu coupé le cordon ombilical avec tes parents ?", "Étais-tu détaché de tes parents sur le plan affectif et émotif, recherchant une saine indépendance ?", "Pouvais-tu être honnête et ouvert avec eux ?", "As-tu pardonné à tes parents les erreurs qu'ils ont pu commettre dans ton éducation ?", "Pouvais-tu vivre tes propres expériences sans sentir l'influence de tes parents derrière toi ?", "Montrais-tu aux membres de ta famille que tu les aimais ?", "Faisais-tu des efforts pour te souvenir des dates de fêtes et des événements particuliers qui arrivaient dans la vie de ceux qui avaient de l'importance pour toi ?", "Te sentais-tu coupable parfois de ne pas avoir un très fort esprit de famille ?", "Était-ce si important pour toi que tout paraisse bien au niveau familial ?" ]
+            },
+            spiritualite: {
+                title: "La spiritualité",
+                questions: [ "As-tu déjà pensé que d'autres pouvaient avoir eu dans la vie autant de difficultés que toi ?", "As-tu pardonné aux vieux amis, aux organisations, aux médecins, aux institutions politiques et judiciaires ou à l'Église qui n'ont pas fait tout ce à quoi tu t'attendais pour améliorer ta vie ?", "Croyais-tu en une Force, une Puissance Supérieure ?", "Étais-tu capable de parler de ta P.S. même si tu la sentais différente des autres ?", "Quels moyens prenais-tu pour maintenir une bonne relation avec ta Puissance Supérieure ?", "Te sentais-tu une partie importante de ce monde dans lequel tu vivais ?", "Vivais-tu un bel équilibre sur le plan spirituel ?", "Croyais-tu avoir une part de divinité (Dieu) en toi ? (en pensant que Dieu nous a créés à son image).", "Avais-tu peur de mourir ?", "Disais-tu souvent aux autres que tu les aimais ?", "Es-tu conscient maintenant qu'avec Dieu, tu ne seras plus jamais seul ?", "Bien des fois, tu aurais pu mourir ou être blessé à l'époque où tu buvais ou consommais, mais cela n'est jamais arrivé. As-tu pris conscience que tu devais être protégé par Quelqu'Un ou par quelque chose ?", "T'arrivait-il de prier dans ton actif ?", "Pratiquais-tu ta religion ?" ]
+            },
+            caractere: {
+                title: "Les traits de caractère",
+                questions: [
+                    { type: 'subheading', text: "La serviabilité et la capacité de recevoir" }, "Étais-tu un enfant et plus tard un adolescent vaillant ?", "Pouvais-tu accepter l'aide et les compliments des autres sans tenter d'y découvrir une raison cachée et sans te sentir obligé de « rendre la politesse » ?",
+                    { type: 'subheading', text: "La gourmandise" }, "As-tu déjà été malade d'avoir trop mangé ou trop bu ?", "Te sentais-tu coupable de trop manger ?",
+                    { type: 'subheading', text: "Le vol" }, "As-tu volé à la maison ou ailleurs ?", "Fraudais-tu les gens (riches ou pauvres) ?",
+                    { type: 'subheading', text: "La lâcheté" }, "Quand tu étais jeune (en classe ou à la maison), laissais-tu punir les autres quand c'était toi le coupable ?", "Préférais-tu te taire plutôt que de parler lorsque quelque chose n'allait pas dans ton milieu de travail ou à la maison ?",
+                    { type: 'subheading', text: "La confiance en soi dans l'enfance" }, "Si quelqu'un parlait contre un ami, prenais-tu sa défense ?", "Te rangeais-tu derrière les idées des autres ?", "Te méfiais-tu des gens ?", "En classe, étais-tu gêné de répondre aux questions ?", "Craignais-tu l'autorité de tes parents, de tes professeurs ou de tes compagnons plus forts que toi ?", "Étais-tu timide, gêné de t'adresser en public ?",
+                    { type: 'subheading', text: "La confiance en soi aujourd'hui" }, "Te sens-tu fragile devant les autres ?", "As-tu peur que les gens te fassent du mal ?", "Prends-tu toi-même tes propres décisions ?", "As-tu peur de ne pas être aussi intelligent que les autres ?",
+                    { type: 'subheading', text: "Le mensonge" }, "Jeune, exagérais-tu tes expériences sportives ?", "Est-ce encore pareil aujourd'hui ?", "À la maison, exagérais-tu ce qui se passait à l'école ?", "Mentais-tu pour épater ? Et aujourd'hui ?", "Racontais-tu des choses fausses dans l'intention de nuire ? Et aujourd'hui ?", "Inventais-tu des faussetés sur les autres afin de leur paraître supérieur ? Cela t'arrive-t-il encore aujourd'hui ?", "As-tu déjà fait de faux témoignages ?",
+                    { type: 'subheading', text: "L'apitoiement" }, "T'apitoyais-tu sur ton sort ? Et aujourd'hui ?", "Essayais-tu d'attirer la pitié sur toi ?", "Te fâchais-tu lorsqu'on te disait que tes malheurs n'étaient pas aussi graves que tu les voyais ?",
+                    { type: 'subheading', text: "La critique" }, "Critiquais-tu souvent négativement l'opinion des autres ?",
+                    { type: 'subheading', text: "Le commérage et la discrétion" }, "Parlais-tu souvent des personnes en leur absence ?", "Révélais-tu des confidences ?", "Te permettais-tu de juger des gens lorsque tu étais en compagnie d'autres personnes ?",
+                    { type: 'subheading', text: "L'avarice et la générosité" }, "Faisais-tu des cadeaux à tes parents ou amis ?", "Jeune, partageais-tu argent, douceurs avec des compagnons moins fortunés ?", "Achetais-tu de l'amour en paraissant généreux ?", "Étais-tu trop centré sur toi-même ?",
+                    { type: 'subheading', text: "L'orgueil et l'humilité" }, "Faire rire de toi te mettait-il hors de toi ? Aujourd'hui ?", "En classe, essayais-tu d'attirer l'attention ?", "Aimais-tu parler de toi ? Aujourd'hui ?", "Acceptais-tu facilement une idée venant des autres ?", "Avais-tu l'habitude de rabaisser les autres ?", "Te tenais-tu seulement avec des gars comme toi ?", "Acceptais-tu les opinions contraires avec un esprit ouvert, y voyant une source d'amélioration personnelle ?", "Évitais-tu d'attirer toujours l'attention sur toi ?", "Étais-tu conscient qu'être humble, c'est d'avoir une honnête appréciation de soi-même ?", "Étais-tu une personne vaniteuse qui cherchait à bien paraître, à te regarder souvent dans un miroir ?", "Étais-tu une personne qui pensait que tout le monde parlait de toi, te pointait et te visait ? (paranoïaque)", "Te croyais-tu plus intelligent que les autres ?",
+                    { type: 'subheading', text: "La colère" }, "Lançais-tu des objets lorsque tu étais en colère ? Aujourd'hui ?", "As-tu déjà frappé quelqu'un ?", "Restais-tu calme dans la tempête et te rappelais-tu que les accusations portées contre toi n'étaient peut-être pas exactes ?", "Essayais-tu d'éviter les sautes d'humeur ?", "Exprimais-tu tes sentiments d'une façon calme ?", "Étais-tu sensible aux sentiments des autres ? (joie, tristesse).",
+                    { type: 'subheading', text: "Le respect de soi et la connaissance de soi" }, "Prenais-tu soin de toi physiquement, mentalement, spirituellement ?", "Essayais-tu d'entretenir de saines amitiés dans lesquelles tu pouvais réellement être toi-même ?", "Tenais-tu compte de toi-même, de ce qui était bien pour toi lorsque tu prenais des décisions ?", "Étais-tu capable de te détendre lorsque tu étais seul ?", "Avais-tu le courage de ne pas laisser les autres abuser de ta personne ?", "Te respectais-tu, t'aimais-tu ?", "Étais-tu aussi bon pour toi-même que tu l'étais pour quelqu'un que tu disais aimer ?", "Appréciais-tu tes talents ?", "Attendais-tu que les autres te disent dans quels domaines tu étais bon ? Attendais-tu qu'ils te disent tes qualités ?", "Acceptais-tu tes limites ?", "Travaillais-tu à ton amélioration personnelle ?", "T'accordais-tu le temps de réfléchir à tes propres besoins spirituels ?", "Te donnais-tu le droit de te tromper ?", "Étais-tu un perfectionniste ?", "Avais-tu de la difficulté à demander et à accepter de l'aide et du soutien ?", "Étais-tu très ambitieux ? (avoir beaucoup de projets à réaliser)", "Étais-tu souvent tendu et fatigué ?", "Avais-tu le constant besoin de prouver ta valeur ?", "Croyais-tu que tu pouvais être aimé ?", "Pouvais-tu aimer gratuitement ?", "Rejeté par les autres, croyais-tu quand même que tu pouvais être aimé ?", "Acceptais-tu ton apparence physique ?", "Admettais-tu qu'il pouvait y avoir de l'amélioration dans tes relations avec ta famille et les gens qui t'entouraient ?", "Pouvais-tu te réconcilier tout en gardant le respect de toi-même ?", "Voyais-tu l'utilité de parler de tes craintes à quelqu'un ?", "Pouvais-tu accepter d'être inquiet sans craindre que tout ne s'écroule ?",
+                    { type: 'subheading', text: "Le travail et la paresse" }, "Entrer sur le marcher du travail te faisait-il peur ?", "Étais-tu heureux de travailler ?", "As-tu changé souvent d'emploi ?", "As-tu choisi le métier que tu exerces ?", "Te rendais-tu compte que remettre au lendemain t'amenait souvent à te justifier ?",
+                    { type: 'subheading', text: "L'envie et la jalousie" }, "Enviais-tu les autres parce que tout semblait bien aller pour eux ?", "Avais-tu confiance dans ta conjointe ?", "As-tu déjà fait des crises de jalousie ?",
+                    { type: 'subheading', text: "Ma maturité et ma capacité d'être réaliste" }, "Étais-tu capable de dire non si tu ne voulais pas faire quelque chose ?", "Prenais-tu les déceptions de la vie avec égalité d'humeur ?", "Pouvais-tu tirer de la satisfaction à faire de ton mieux ?", "Acceptais-tu la responsabilité de tes actes et de ton comportement ?", "Prenais-tu ton temps pour réfléchir avant d'agir impulsivement ?", "Analysais-tu tous les faits avant de tirer tes propres conclusions ?", "T'étais-tu fabriqué des rêves que tu n'as pas pu réaliser ?", "Avais-tu de la difficulté à t'accepter tel que tu étais ?",
+                    { type: 'subheading', text: "L'optimisme et le pessimisme" }, "Étais-tu heureux ?", "Cherchais-tu à tirer le meilleur parti dans chacune des situations qui se présentaient ?", "Étais-tu disposé à faire ton possible pour réaliser tes espérances ?", "Croyais-tu que tout pouvait aller en s'améliorant si tu te décidais d'y croire et de faire ce que tu pouvais en conséquence ?",
+                    { type: 'subheading', text: "L'esprit ouvert et l'entêtement" }, "Pouvais-tu avoir l'esprit ouvert et prêter une oreille attentive à ceux qui avaient des idées nouvelles ?", "Essayais-tu de comprendre le point de vue d'un autre même si tu n'étais pas d'accord ?",
+                    { type: 'subheading', text: "Porté à juger ou à accepter les autres" }, "Te faisais-tu une idée de quelqu'un avant de le connaître ?", "Respectais-tu les sentiments et les expériences des autres ?", "Étais-tu intolérant ?", "Imposais-tu tes idées aux autres ?",
+                    { type: 'subheading', text: "Les communications" }, "Étais-tu à l'aise dans tes rapports avec les autres ?", "Étais-tu à l'aise pour prendre la parole en public ?", "Exprimais-tu ce que tu ressentais ?",
+                    { type: 'subheading', text: "La courtoisie" }, "Écoutais-tu attentivement les autres quand ils parlaient ?", "Traitais-tu les autres avec respect en tenant compte de leurs sentiments ?"
+                ]
+            }
+        };
+
+        // --- APPLICATION LOGIC ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const navigation = document.getElementById('navigation');
+            const content = document.getElementById('content');
+            const status = document.getElementById('status');
+            let answers = {};
+            
+            // --- DATA PERSISTENCE ---
+            function loadAnswers() {
+                const savedAnswers = localStorage.getItem('personalInventoryAnswers');
+                if (savedAnswers) {
+                    answers = JSON.parse(savedAnswers);
+                    status.textContent = 'Progrès chargé.';
+                } else {
+                    answers = { ressentiments: [] }; 
+                     status.textContent = 'Commencez votre inventaire.';
+                }
+            }
+
+            function saveAnswers() {
+                localStorage.setItem('personalInventoryAnswers', JSON.stringify(answers));
+                status.textContent = 'Progrès sauvegardé.';
+            }
+
+             // --- GEMINI API CALL ---
+            async function callGemini(prompt) {
+                const apiKey = ""; // API key is handled by the environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: prompt }]
+                    }]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                         // Check for safety ratings block
+                        if (result.candidates && result.candidates[0]?.finishReason === 'SAFETY') {
+                             return "La réponse n'a pas pu être générée car le contenu a été jugé non sécuritaire par le modèle. Essayez de reformuler vos réponses.";
+                        }
+                        return "Désolé, une erreur est survenue lors de la génération de la réflexion. La réponse du modèle était vide ou mal formée.";
+                    }
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    return "Désolé, une erreur de connexion est survenue. Veuillez vérifier votre connexion internet et réessayer.";
+                }
+            }
+            
+            // --- UI RENDERING ---
+            function renderApp() {
+                navigation.innerHTML = '';
+                content.innerHTML = '';
+
+                for (const sectionKey in questionnaire) {
+                    const section = questionnaire[sectionKey];
+                    
+                    const navLink = document.createElement('a');
+                    navLink.href = `#${sectionKey}`;
+                    navLink.textContent = section.title;
+                    navLink.className = 'block py-2 px-4 rounded-md text-slate-700 hover:bg-slate-100 font-medium transition-colors';
+                    navigation.appendChild(navLink);
+
+                    const sectionContainer = document.createElement('div');
+                    sectionContainer.id = sectionKey;
+                    sectionContainer.className = 'p-6 bg-white rounded-xl shadow-sm';
+                    
+                    const title = document.createElement('h2');
+                    title.textContent = section.title;
+                    title.className = 'text-3xl font-bold mb-6 text-slate-900 border-b pb-4';
+                    sectionContainer.appendChild(title);
+
+                    if (section.content) { // Introduction
+                        section.content.forEach(item => {
+                            let el;
+                            if (item.type === 'heading') { el = document.createElement('h3'); el.className = 'text-xl font-semibold mt-6 mb-2 text-slate-800'; } 
+                            else if (item.type === 'subheading') { el = document.createElement('h4'); el.className = 'text-lg font-medium mt-4 mb-2 text-slate-700'; } 
+                            else if (item.type === 'paragraph') { el = document.createElement('p'); el.className = 'mb-4 text-slate-600 leading-relaxed'; } 
+                            else if (item.type === 'list') {
+                                el = document.createElement('ol');
+                                el.className = 'list-decimal list-inside space-y-2 mb-4 text-slate-600';
+                                item.items.forEach(liText => {
+                                    const li = document.createElement('li');
+                                    li.textContent = liText;
+                                    el.appendChild(li);
+                                });
+                            }
+                            if(el && item.text) { el.textContent = item.text; }
+                            if (el) sectionContainer.appendChild(el);
+                        });
+                    } else if (section.type === 'table') { // Ressentiments table
+                        const description = document.createElement('p');
+                        description.textContent = section.description;
+                        description.className = 'mb-4 text-slate-600';
+                        sectionContainer.appendChild(description);
+
+                        const addButton = document.createElement('button');
+                        addButton.textContent = 'Ajouter un ressentiment';
+                        addButton.className = 'mb-4 bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors';
+                        addButton.onclick = () => {
+                            if (!answers[sectionKey]) { answers[sectionKey] = []; }
+                            answers[sectionKey].push({ col1: '', col2: '', col3: '' });
+                            saveAnswers();
+                            const container = document.getElementById(`${sectionKey}-table-container`);
+                            renderRessentimentsTable(sectionKey, container);
+                        };
+                        sectionContainer.appendChild(addButton);
+                        
+                        const tableContainer = document.createElement('div');
+                        tableContainer.id = `${sectionKey}-table-container`;
+                        tableContainer.className = 'overflow-x-auto';
+                        sectionContainer.appendChild(tableContainer);
+                        renderRessentimentsTable(sectionKey, tableContainer);
+
+                    } else if (section.questions) { // Standard question sections
+                        section.questions.forEach((question, index) => {
+                             if (typeof question === 'object' && question.type === 'subheading') {
+                                 const subHeading = document.createElement('h3');
+                                 subHeading.textContent = question.text;
+                                 subHeading.className = 'text-xl font-semibold mt-8 mb-4 border-b pb-2 text-slate-800';
+                                 sectionContainer.appendChild(subHeading);
+                             } else {
+                                const questionText = typeof question === 'string' ? question : question.text;
+                                const questionId = `${sectionKey}_q${index}`;
+                                const questionWrapper = document.createElement('div');
+                                questionWrapper.className = 'mb-6';
+                                const questionLabel = document.createElement('label');
+                                questionLabel.textContent = `${index + 1}. ${questionText}`;
+                                questionLabel.htmlFor = questionId;
+                                questionLabel.className = 'block font-medium mb-2 text-slate-700';
+                                const answerTextarea = document.createElement('textarea');
+                                answerTextarea.id = questionId;
+                                answerTextarea.rows = '4';
+                                answerTextarea.className = 'w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resizable-textarea';
+                                answerTextarea.placeholder = 'Votre réponse ici...';
+                                if (answers[questionId]) { answerTextarea.value = answers[questionId]; }
+                                answerTextarea.addEventListener('input', () => { answers[questionId] = answerTextarea.value; saveAnswers(); });
+                                questionWrapper.appendChild(questionLabel);
+                                questionWrapper.appendChild(answerTextarea);
+                                sectionContainer.appendChild(questionWrapper);
+                             }
+                        });
+                        
+                        // Add AI Reflection Button and container
+                        const aiContainer = document.createElement('div');
+                        aiContainer.className = 'mt-8 text-center';
+
+                        const aiButton = document.createElement('button');
+                        aiButton.innerHTML = `✨ Obtenir une Réflexion IA`;
+                        aiButton.className = 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-600 hover:to-indigo-700 transition-all shadow-lg';
+                        aiContainer.appendChild(aiButton);
+
+                        const aiResultDiv = document.createElement('div');
+                        aiResultDiv.id = `ai-result-${sectionKey}`;
+                        aiResultDiv.className = 'ai-response p-4 mt-6 text-left rounded-lg hidden';
+                        aiContainer.appendChild(aiResultDiv);
+
+                        aiButton.addEventListener('click', () => handleAiReflectionClick(sectionKey, section.title, aiResultDiv));
+                        
+                        sectionContainer.appendChild(aiContainer);
+                    }
+                    content.appendChild(sectionContainer);
+                }
+            }
+
+            async function handleAiReflectionClick(sectionKey, sectionTitle, resultContainer) {
+                resultContainer.classList.remove('hidden');
+                resultContainer.innerHTML = '<div class="flex justify-center items-center"><div class="spinner"></div></div>';
+
+                let formattedAnswers = "";
+                let answerCount = 0;
+                questionnaire[sectionKey].questions.forEach((question, index) => {
+                    if (typeof question !== 'object') {
+                        const questionId = `${sectionKey}_q${index}`;
+                        const answer = answers[questionId];
+                        if (answer && answer.trim() !== '') {
+                            formattedAnswers += `Question: ${question}\nRéponse: ${answer}\n\n`;
+                            answerCount++;
+                        }
+                    }
+                });
+
+                if (answerCount < 1) {
+                    resultContainer.innerHTML = "Veuillez répondre à au moins une question dans cette section pour obtenir une réflexion.";
+                    return;
+                }
+
+                const prompt = `Tu es un guide de réflexion bienveillant et perspicace. Voici les réponses d'une personne à une section d'un inventaire personnel sur le thème de "${sectionTitle}". Lis attentivement ces réponses. Sans donner de conseils, synthétise les points principaux, identifie les thèmes récurrents ou les émotions sous-jacentes, puis pose 2 ou 3 questions ouvertes et douces pour aider l'utilisateur à réfléchir encore plus profondément à ce qu'il a écrit. Le but est d'encourager une introspection plus poussée, pas de juger ou d'analyser. Réponds exclusivement en français. Voici les réponses :\n\n${formattedAnswers}`;
+
+                const aiResponse = await callGemini(prompt);
+                // Simple markdown to HTML conversion
+                const formattedResponse = aiResponse
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                    .replace(/\n/g, '<br>');
+                resultContainer.innerHTML = formattedResponse;
+            }
+            
+            function renderRessentimentsTable(sectionKey, container) {
+                if (!container) return;
+                container.innerHTML = '';
+                const table = document.createElement('table');
+                table.className = 'w-full border-collapse';
+                const thead = document.createElement('thead');
+                const headerRow = document.createElement('tr');
+                questionnaire[sectionKey].columns.forEach(col => {
+                    const th = document.createElement('th');
+                    th.textContent = col;
+                    th.className = 'p-3 border border-slate-300 bg-slate-100 text-left font-semibold';
+                    headerRow.appendChild(th);
+                });
+                const actionTh = document.createElement('th');
+                actionTh.className = 'p-3 border border-slate-300 bg-slate-100';
+                headerRow.appendChild(actionTh);
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+                const tbody = document.createElement('tbody');
+                table.appendChild(tbody);
+                container.appendChild(table);
+                if (answers[sectionKey] && answers[sectionKey].length > 0) {
+                    answers[sectionKey].forEach((rowData, rowIndex) => {
+                        addRessentimentRow(rowData, sectionKey, rowIndex, tbody);
+                    });
+                }
+            }
+
+            function addRessentimentRow(rowData, sectionKey, rowIndex, tbody) {
+                if(!tbody) return;
+                const row = document.createElement('tr');
+                row.className = 'bg-white';
+                for (let i = 1; i <= 3; i++) {
+                    const cell = document.createElement('td');
+                    cell.className = 'p-1 border border-slate-300';
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'w-full h-full p-2 border-none focus:ring-0 resizable-textarea bg-transparent';
+                    textarea.rows = '3';
+                    textarea.value = rowData ? rowData[`col${i}`] : '';
+                    textarea.dataset.row = rowIndex;
+                    textarea.dataset.col = i;
+                    textarea.addEventListener('input', (e) => {
+                        answers[sectionKey][e.target.dataset.row][`col${e.target.dataset.col}`] = e.target.value;
+                        saveAnswers();
+                    });
+                    cell.appendChild(textarea);
+                    row.appendChild(cell);
+                }
+                const actionCell = document.createElement('td');
+                actionCell.className = 'p-2 border border-slate-300 text-center align-middle';
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '&#x2715;';
+                deleteButton.className = 'text-red-500 hover:text-red-700 font-bold';
+                deleteButton.onclick = () => {
+                    answers[sectionKey].splice(rowIndex, 1);
+                    saveAnswers();
+                    const container = document.getElementById(`${sectionKey}-table-container`);
+                    renderRessentimentsTable(sectionKey, container);
+                };
+                actionCell.appendChild(deleteButton);
+                row.appendChild(actionCell);
+                tbody.appendChild(row);
+            }
+
+            // --- PDF GENERATION ---
+            function generatePDF() {
+                status.textContent = 'Génération du PDF...';
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+                let y = 20;
+                const margin = 15;
+                const pageHeight = doc.internal.pageSize.height;
+                const contentWidth = doc.internal.pageSize.width - (2 * margin);
+                const checkPageBreak = (spaceNeeded) => {
+                    if (y + spaceNeeded > pageHeight - margin) { doc.addPage(); y = margin; }
+                };
+                
+                doc.setFont('Inter', 'bold');
+                doc.setFontSize(24);
+                doc.text("Mon Inventaire Personnel", doc.internal.pageSize.width / 2, y, { align: 'center' });
+                y += 20;
+                
+                for (const sectionKey in questionnaire) {
+                    const section = questionnaire[sectionKey];
+                    checkPageBreak(20);
+                    doc.setFont('Inter', 'bold');
+                    doc.setFontSize(18);
+                    doc.text(section.title, margin, y);
+                    y += 10;
+                    
+                    if(section.content) {
+                         section.content.forEach(item => {
+                            let textContent = item.text || (item.items ? item.items.join('\n') : '');
+                            let fontSize = 11; let fontStyle = 'normal';
+                            if (item.type === 'heading') { fontSize = 14; fontStyle = 'bold'; }
+                            if (item.type === 'subheading') { fontSize = 12; fontStyle = 'bold'; }
+                            if (item.type === 'list') { 
+                                item.items.forEach(li => {
+                                    const lines = doc.setFont(fontStyle).setFontSize(fontSize).splitTextToSize(`• ${li}`, contentWidth);
+                                    checkPageBreak(lines.length * 5); doc.text(lines, margin, y); y += lines.length * 5;
+                                });
+                                textContent = '';
+                            }
+                            if(textContent) {
+                                const lines = doc.setFont(fontStyle).setFontSize(fontSize).splitTextToSize(textContent, contentWidth);
+                                checkPageBreak(lines.length * 5); doc.text(lines, margin, y); y += lines.length * 5 + 5;
+                            }
+                        });
+                    }
+                    else if(section.type === 'table') {
+                        if (answers[sectionKey] && answers[sectionKey].length > 0) {
+                            const head = [section.columns];
+                            const body = answers[sectionKey].map(row => [row.col1, row.col2, row.col3]);
+                            checkPageBreak(15);
+                            doc.autoTable({
+                                head: head, body: body, startY: y, margin: { left: margin },
+                                styles: { font: 'Inter', fontSize: 10 },
+                                headStyles: { fillColor: [230, 230, 230], textColor: 20, fontStyle: 'bold' },
+                                didDrawPage: (data) => { y = data.cursor.y + 10; }
+                            });
+                            y = doc.lastAutoTable.finalY ? doc.lastAutoTable.finalY + 10 : y;
+                        } else {
+                            doc.setFont('Inter', 'normal').setFontSize(11);
+                            doc.text("Aucun ressentiment n'a été enregistré.", margin, y); y += 10;
+                        }
+                    } else if (section.questions) {
+                        section.questions.forEach((question, index) => {
+                            if (typeof question === 'object' && question.type === 'subheading') {
+                                checkPageBreak(10);
+                                doc.setFont('Inter', 'bold').setFontSize(14);
+                                doc.text(question.text, margin, y); y += 10;
+                            } else {
+                                const questionText = typeof question === 'string' ? question : question.text;
+                                const questionId = `${sectionKey}_q${index}`;
+                                const answer = answers[questionId] || "Pas de réponse.";
+                                checkPageBreak(10);
+                                doc.setFont('Inter', 'bold').setFontSize(12);
+                                const qLines = doc.splitTextToSize(`${index + 1}. ${questionText}`, contentWidth);
+                                doc.text(qLines, margin, y); y += (qLines.length * 5) + 2;
+                                checkPageBreak(10);
+                                doc.setFont('Inter', 'normal').setFontSize(11);
+                                const aLines = doc.splitTextToSize(answer, contentWidth);
+                                doc.text(aLines, margin, y); y += (aLines.length * 5) + 8;
+                            }
+                        });
+                    }
+                    y += 10;
+                }
+                
+                doc.save('Mon-Inventaire-Personnel.pdf');
+                status.textContent = 'PDF généré !';
+            }
+
+            // --- INITIALIZATION ---
+            loadAnswers();
+            renderApp();
+            document.getElementById('generate-pdf-btn').addEventListener('click', generatePDF);
+        });
+    </script>
 
 </body>
 </html>
